@@ -1,0 +1,34 @@
+<link href='https://fonts.googleapis.com/css?family=Ubuntu:500' rel='stylesheet' type='text/css'>
+
+<div class="login">
+  <div class="login-header">
+    <h1>Login</h1>
+  </div>
+  <form class="login-form" #loginFormAdmin="ngForm" [formGroup]="loginForm">
+    <h3>Nombre del administrador:</h3>
+    <input type="text" placeholder="Nombre de la compañia"
+    formControlName="nameOfCompany"/>
+    <div class="errorCodigo" *ngIf="loginForm.get('nameOfCompany')!.hasError('required') && loginForm.get('nameOfCompany')!.touched">
+      * El campo del "nombre" no debe estar vacio
+    </div>
+    <div class="errorCodigo" *ngIf="loginForm.get('nameOfCompany')!.hasError('soloHayEspacios') && loginForm.get('nameOfCompany')!.touched">
+      * No coloque solo espacios en blanco
+    </div>
+    
+    <br>
+    <h3>Password:</h3>
+    <input type="password" placeholder="Password"
+    formControlName="password"/>
+    <div class="errorCodigo" *ngIf="loginForm.get('password')!.hasError('required') && loginForm.get('password')!.touched">
+       * El campo "password" no debe estar vacio
+    </div>
+    <div class="errorCodigo" *ngIf="loginForm.get('password')!.hasError('soloHayEspacios') && loginForm.get('password')!.touched">
+      * No coloque solo espacios en blanco
+    </div>
+    <br>
+    <input type="button" value="Login" class="login-button" (click)="login(loginFormAdmin)"/>
+    <br>
+    
+    
+  </form>
+</div>

@@ -1,0 +1,27 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CrudAdminService {
+
+  constructor(private httpClient: HttpClient) { }
+
+  consultandoAdmin(datosAdmin:any){
+    let json = JSON.stringify(datosAdmin);
+
+    let headers = new HttpHeaders().set('Content-Type','application/json')
+
+    return this.httpClient.post("http://localhost:3000/consult_admin", json, {headers : headers});
+  }
+
+  consultandoAdminPorId(datosAdmin:any){
+    let json = JSON.stringify(datosAdmin);
+
+    let headers = new HttpHeaders().set('Content-Type','application/json')
+
+    return this.httpClient.post("http://localhost:3000/consult_admin_for_id", json, {headers : headers});
+  }
+}
