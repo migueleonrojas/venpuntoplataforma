@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
 
   responseCrud:any;
   logIn:any;
+  token:any;
 
   loginForm = new FormGroup({
     nameOfCompany: new FormControl(''),
@@ -73,6 +74,9 @@ export class LoginComponent implements OnInit {
 
       this.crudAdminService.consultandoAdmin(dataAdmin).subscribe( response => {
         this.responseCrud = response;
+        this.token = localStorage.setItem('token', this.responseCrud.token);
+        console.log("Token guardado "+localStorage.getItem('token'));        
+        console.log("Token recibido "+this.responseCrud.token);        
 
         if(this.responseCrud.codigo === 1){
           this.toastr.success(this.responseCrud.mensaje, 'Ingreso exitoso');
@@ -82,16 +86,33 @@ export class LoginComponent implements OnInit {
           }).subscribe(response => {
 
             this.logIn = response;
+            console.log(this.logIn.codigo);
+            
+            if(this.logIn.codigo !== 0){
 
-            let adminData = {
-              id: this.logIn.mensaje._id,
-              nombre: this.logIn.mensaje.Nombre,
-              loggedin: this.logIn.mensaje.LoggedIn
+              let adminData = {
+                id: this.logIn.mensaje._id,
+                nombre: this.logIn.mensaje.Nombre,
+                loggedin: this.logIn.mensaje.LoggedIn
+    
+              };
   
-            };
+              localStorage.setItem('admin', JSON.stringify(adminData));
+              this.router.navigate(['/admin_user']);
 
-            localStorage.setItem('admin', JSON.stringify(adminData));
-            this.router.navigate(['/admin_user']);
+            }
+
+            else{
+              this.crudAdminService.logoffAdmin({
+                id: this.logIn.mensaje._id
+              }).subscribe(response => {
+
+                console.log(response);
+                localStorage.removeItem('admin');
+              })
+            }
+
+            
           });
           
 

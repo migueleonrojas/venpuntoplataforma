@@ -74,15 +74,7 @@ export class UserAdminComponent implements OnInit {
       idCompany: companieForAdmin._id
     }).subscribe(response => {
 
-      this.companiesForAdmin.push({
-        Direccion:"",
-        IdAdmin:"",
-        Nombre:"",
-        Rif:"",
-        __v:"",
-        _id:""
-
-        });
+      
     
       this.crudCompaniesService.consultCompanies({
         idAdmin: this.adminName.id
@@ -92,7 +84,16 @@ export class UserAdminComponent implements OnInit {
   
         this.companiesForAdmin = this.companies.mensaje
 
-        
+        this.companiesForAdmin.push({
+          Direccion:"",
+          IdAdmin:"",
+          Nombre:"",
+          Rif:"",
+          __v:"",
+          _id:""
+  
+          });
+          
   
       })
     })
@@ -159,14 +160,24 @@ export class UserAdminComponent implements OnInit {
     
           this.companies = response;
     
-          this.companiesForAdmin = this.companies.mensaje
+          this.companiesForAdmin = this.companies.mensaje;
+
+          this.companiesForAdmin.push({
+            Direccion:"",
+            IdAdmin:"",
+            Nombre:"",
+            Rif:"",
+            __v:"",
+            _id:""
+    
+            });
     
         });
       })
 
       
     }
-
+    
     
   }
 
