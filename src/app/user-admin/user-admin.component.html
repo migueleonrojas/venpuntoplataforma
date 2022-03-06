@@ -1,1 +1,57 @@
-<p>user-admin works!</p>
+<header class="header">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Admin {{adminName.nombre}}</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active" (click)="closeSession()">
+            <div class="nav-link" href="/admin_user">Cerrar sesion<span class="sr-only">(current)</span></div>
+          </li>
+               
+        </ul>
+        
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="w-50 table-company">
+        <table class="table table-light table-sm table-striped table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre de la empresa</th>
+                <th scope="col">Rif</th>
+                <th scope="col">Direccion</th>
+            </tr>
+            </thead>
+            <tbody class="listCompanies">
+              <tr  *ngFor="let companieForAdmin of companiesForAdmin;let indice = index">
+                  <th scope="row">{{indice + 1}}</th>
+                  <td class="fila fila{{indice + 1}}">{{companieForAdmin.Nombre}}</td>
+                  <td class="fila fila{{indice + 1}}">{{companieForAdmin.Rif}}</td>
+                  <td class="fila fila{{indice + 1}}">{{companieForAdmin.Direccion}}</td>
+                  
+                  <ng-template #desactivado>
+                    <td>
+                      <input type="button" value="Actualizar" (click)="updateCompany(companieForAdmin, indice)">
+                    </td>
+                    <td>
+                      <input type="button" value="Eliminar" (click)="deleteCompany(companieForAdmin)">
+                    </td>
+                  </ng-template>
+                  <td class= "filaLast"  colspan="6" >
+                    <input   type="button" value="Agregar empresa" *ngIf="indice == companiesForAdmin.length - 1; else desactivado" (click)="addCompany()">
+                  </td>
+              </tr>
+              
+            
+            </tbody>
+        </table>
+
+        
+    </div>   
+  </main>

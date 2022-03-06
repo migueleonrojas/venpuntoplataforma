@@ -4,6 +4,7 @@ const uniqueValidator = require('mongoose-unique-validator');
 const validator = require('validator');
 
 let adminSchema = new schema ({
+    
     Nombre: {
         type: String,
         required: [true, 'El nombre del admin no puede estar vacio'],

@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
 
   responseCrud:any;
+  logIn:any;
 
   loginForm = new FormGroup({
     nameOfCompany: new FormControl(''),
@@ -75,16 +76,24 @@ export class LoginComponent implements OnInit {
 
         if(this.responseCrud.codigo === 1){
           this.toastr.success(this.responseCrud.mensaje, 'Ingreso exitoso');
+
+          this.crudAdminService.loginAdmin({
+            id: this.responseCrud.dataAdmin._id
+          }).subscribe(response => {
+
+            this.logIn = response;
+
+            let adminData = {
+              id: this.logIn.mensaje._id,
+              nombre: this.logIn.mensaje.Nombre,
+              loggedin: this.logIn.mensaje.LoggedIn
+  
+            };
+
+            localStorage.setItem('admin', JSON.stringify(adminData));
+            this.router.navigate(['/admin_user']);
+          });
           
-          let adminData = {
-            id: this.responseCrud.dataAdmin._id,
-            nombre: this.responseCrud.dataAdmin.Nombre,
-            loggedin: this.responseCrud.dataAdmin.LoggedIn
-
-          };
-          localStorage.setItem('admin', JSON.stringify(adminData));
-
-          this.router.navigate(['/admin_user']);
 
         }
 
@@ -103,19 +112,16 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(formLogin:any){
-    alert('1111');
-    /* let dataAdmin = {
-      nombre: formLogin.controls.nameOfCompany.value,
-      password: formLogin.controls.password.value
-    }
+    
+    
 
-    this.crudAdminService.consultandoAdmin(dataAdmin).subscribe( response => {
-      console.log(response);
-    }); */
   }
   
 
   ngOnInit(): void {
+
+    
+
   }
 
 }

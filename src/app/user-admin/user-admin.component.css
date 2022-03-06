@@ -1,0 +1,17 @@
+.nav-link{
+    cursor: pointer;
+    
+}
+
+.table-company{
+    margin: 20vh auto auto auto;
+}
+
+.editRow{
+    
+    background-color: black;
+    color: white;
+}
+.addCompany, .filaLast{
+    text-align: center;
+}

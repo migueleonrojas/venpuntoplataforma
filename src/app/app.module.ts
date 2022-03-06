@@ -11,6 +11,10 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { UserAdminComponent } from './user-admin/user-admin.component';
+import { UserAdminGuard } from './security/user-admin.guard';
+import {LoginAdminGuard} from './security/login-admin.guard';
+
+
 
 @NgModule({
   declarations: [
@@ -23,9 +27,9 @@ import { UserAdminComponent } from './user-admin/user-admin.component';
     BrowserModule,
     AppRoutingModule,
     RouterModule.forRoot([
-      {path: '', component: LoginComponent},
+      {path: '', component: LoginComponent, canActivate: [LoginAdminGuard]},
       {path: 'sing_up', component: SignUpComponent},
-      {path: 'admin_user', component: UserAdminComponent}
+      {path: 'admin_user', component: UserAdminComponent, canActivate: [UserAdminGuard]}
       
     ]),
     ReactiveFormsModule,
@@ -33,7 +37,10 @@ import { UserAdminComponent } from './user-admin/user-admin.component';
     ToastrModule.forRoot(),
     BrowserAnimationsModule
   ],
-  providers: [CookieService],
+  providers: [
+    CookieService,
+    { provide: Window, useValue: window }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
