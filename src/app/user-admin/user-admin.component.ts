@@ -121,7 +121,7 @@ export class UserAdminComponent implements OnInit {
       //nuevamente presiones el boton de actualizar para confirmar la accion
       if(index === 0 && elemento.classList.contains('editRow') === false){
         this.toastrService.info("Edite las casilla en negro, si desea confirmar la actualizacion pulse de nuevo el boton de 'Actualizar'","Ya puede editar el registro",{
-          timeOut: 5000,
+          timeOut: 15000,
           closeButton: true,
         });
       }
@@ -170,13 +170,13 @@ export class UserAdminComponent implements OnInit {
         }
         if(this.updated.codigo === 0){
           this.toastrService.error(this.updated.mensaje, "error",{
-            timeOut: 5000,
+            timeOut: 15000,
             closeButton: true,
           });
         }
         if(this.updated.codigo === -1){
           this.toastrService.error(this.updated.mensaje, "error",{
-            timeOut: 5000,
+            timeOut: 15000,
             closeButton: true,
           });
         }
@@ -248,7 +248,7 @@ export class UserAdminComponent implements OnInit {
       //nuevamente presiones el boton de agregar para confirmar la accion
       if(index === 0 && elemento.classList.contains('editRow') === false){
         this.toastrService.info("Edite las casilla en negro, si desea confirmar el registro de una empresa pulse de nuevo el boton de 'Agregar Empresa'","Ya puede editar el registro",{
-          timeOut: 5000,
+          timeOut: 15000,
           closeButton: true,
         });
       }
@@ -295,7 +295,7 @@ export class UserAdminComponent implements OnInit {
         //codigo -1 indica que acontencio un error
         if(this.updated.codigo === -1){
           this.toastrService.error(this.updated.mensaje, "error",{
-            timeOut: 5000,
+            timeOut: 15000,
             closeButton: true,
           });
 
@@ -323,7 +323,7 @@ export class UserAdminComponent implements OnInit {
         //codigo 0 indica que no acontencio un error, pero no hizo la accion del crud
         if(this.updated.codigo === 0){
           this.toastrService.error(this.updated.mensaje, "error",{
-            timeOut: 5000,
+            timeOut: 15000,
             closeButton: true,
           });
           //se consultas las companias para actualizar la lista de companias
