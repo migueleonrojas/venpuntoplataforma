@@ -6,7 +6,7 @@
   </div>
   <form class="login-form" #loginFormAdmin="ngForm" [formGroup]="loginForm">
     <h3>Nombre del administrador:</h3>
-    <input type="text" placeholder="Nombre de la compañia"
+    <input type="text" placeholder="Nombre del administrador"
     formControlName="nameOfCompany"/>
     <div class="errorCodigo" *ngIf="loginForm.get('nameOfCompany')!.hasError('required') && loginForm.get('nameOfCompany')!.touched">
       * El campo del "nombre" no debe estar vacio

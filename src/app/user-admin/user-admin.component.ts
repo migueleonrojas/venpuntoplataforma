@@ -17,8 +17,10 @@ export class UserAdminComponent implements OnInit {
   companiesForAdmin:any=[];
   logoff:any;
   updated:any;
-  confirmUpdate:boolean = false;
-  
+  addCompanyConfirm:any;
+  addButtonClickCount:number = 0;
+  updateCompanyConfirm:any;
+  updateButtonClickCount:number = 0;
 
 
   constructor(
@@ -108,7 +110,8 @@ export class UserAdminComponent implements OnInit {
   updateCompany(companieForAdmin:any, index:any){
 
     const d = document;
-    let update;
+    this.updateCompanyConfirm = false;
+    this.updateButtonClickCount++;
     let udpatesValues:any = [];
 
     //obtiene la fila donde esta el boton correspondiente
@@ -123,7 +126,7 @@ export class UserAdminComponent implements OnInit {
       //la pregunta de confirmacion para realizar la accion
       if(index === 0 && elemento.classList.contains('editRow') === true){
 
-        update = confirm(`Estas seguro que quieres actualizar el registro?.\nNombre: ${companieForAdmin.Nombre}\nRif: ${companieForAdmin.Rif}\nDireccion: ${companieForAdmin.Direccion}`)
+        this.updateCompanyConfirm = confirm(`Estas seguro que quieres actualizar el registro?.\nNombre: ${companieForAdmin.Nombre}\nRif: ${companieForAdmin.Rif}\nDireccion: ${companieForAdmin.Direccion}`)
 
         elemento.removeAttribute("contenteditable");
 
@@ -148,7 +151,7 @@ export class UserAdminComponent implements OnInit {
     });
 
     //si confirma la actualizacion, realiza el crud en la base de datos
-    if(update){
+    if(this.updateCompanyConfirm){
 
       this.crudCompaniesService.updateCompany({
         idAdmin: this.adminName.id,
@@ -182,6 +185,30 @@ export class UserAdminComponent implements OnInit {
         });
       })
     }
+
+    //si se cancela se revierte la operacion
+    if(!this.updateCompanyConfirm && this.updateButtonClickCount % 2 === 0){
+      //se consultas las companias para actualizar la lista de companias
+      this.crudCompaniesService.consultCompanies({
+        idAdmin: this.adminName.id
+      }).subscribe(response =>{
+  
+        this.companies = response;
+  
+        this.companiesForAdmin = this.companies.mensaje
+
+        this.companiesForAdmin.push({
+          Direccion:"",
+          IdAdmin:"",
+          Nombre:"",
+          Rif:"",
+          __v:"",
+          _id:""
+  
+          });
+  
+      });
+    }
     
 
     
@@ -191,7 +218,10 @@ export class UserAdminComponent implements OnInit {
   addCompany(){
     const d = document;
 
-    let update;
+    
+    this.addCompanyConfirm = false;
+    this.addButtonClickCount++;
+
     let udpatesValues:any = [];
    
     //obtiene la fila donde esta el boton correspondiente
@@ -207,7 +237,7 @@ export class UserAdminComponent implements OnInit {
       //la pregunta de confirmacion para realizar la accion
       if(index === 0 && elemento.classList.contains('editRow') === true){
 
-        update = confirm(`Estas seguro que quieres guardar el registro?`)
+        this.addCompanyConfirm = confirm(`Estas seguro que quieres guardar el registro?`)
 
         elemento.removeAttribute("contenteditable");
 
@@ -230,7 +260,7 @@ export class UserAdminComponent implements OnInit {
     });
 
     //si confirma la actualizacion, realiza el crud en la base de datos
-    if(update){
+    if(this.addCompanyConfirm){
       
       this.crudCompaniesService.registrarCompany({
         nombre: udpatesValues[0],
@@ -240,15 +270,56 @@ export class UserAdminComponent implements OnInit {
         
       }).subscribe(response =>{
         this.updated = response;
-        console.log(this.updated);
+        
 
         //codigo -1 indica que acontencio un error
         if(this.updated.codigo === -1){
           this.toastrService.error(this.updated.mensaje, this.updated.error);
+
+          //se consultas las companias para actualizar la lista de companias
+          this.crudCompaniesService.consultCompanies({
+            idAdmin: this.adminName.id
+          }).subscribe(response =>{
+      
+            this.companies = response;
+      
+            this.companiesForAdmin = this.companies.mensaje
+
+            this.companiesForAdmin.push({
+              Direccion:"",
+              IdAdmin:"",
+              Nombre:"",
+              Rif:"",
+              __v:"",
+              _id:""
+      
+              });
+      
+          });
         }
         //codigo 0 indica que no acontencio un error, pero no hizo la accion del crud
         if(this.updated.codigo === 0){
           this.toastrService.error(this.updated.mensaje, this.updated.error);
+          //se consultas las companias para actualizar la lista de companias
+          this.crudCompaniesService.consultCompanies({
+            idAdmin: this.adminName.id
+          }).subscribe(response =>{
+      
+            this.companies = response;
+      
+            this.companiesForAdmin = this.companies.mensaje
+
+            this.companiesForAdmin.push({
+              Direccion:"",
+              IdAdmin:"",
+              Nombre:"",
+              Rif:"",
+              __v:"",
+              _id:""
+      
+              });
+      
+          });
         }
         //codigo 1 se realizo el crud con exito
         if(this.updated.codigo === 1){
@@ -282,8 +353,32 @@ export class UserAdminComponent implements OnInit {
 
       
     }
-    
+    //si se cancela se revierte la operacion
+    if(!this.addCompanyConfirm && this.addButtonClickCount % 2 === 0){
+      //se consultas las companias para actualizar la lista de companias
+      this.crudCompaniesService.consultCompanies({
+        idAdmin: this.adminName.id
+      }).subscribe(response =>{
+  
+        this.companies = response;
+  
+        this.companiesForAdmin = this.companies.mensaje
 
+        this.companiesForAdmin.push({
+          Direccion:"",
+          IdAdmin:"",
+          Nombre:"",
+          Rif:"",
+          __v:"",
+          _id:""
+  
+          });
+  
+      });
+    }
+    
+    
+    
   }
   
   
