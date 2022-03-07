@@ -17,6 +17,7 @@ export class UserAdminComponent implements OnInit {
   companiesForAdmin:any=[];
   logoff:any;
   updated:any;
+  confirmUpdate:boolean = false;
   
 
 
@@ -26,19 +27,21 @@ export class UserAdminComponent implements OnInit {
     private router: Router,
     private toastrService:ToastrService
   ){ 
+    //obtiene los datos del usuario que se logeo con exito
     this.adminName = JSON.parse( (localStorage.getItem('admin') || "{}"));
-    console.log(this.adminName)
     
   }
 
   ngOnInit(): void {
    
+    //se cargan todas las companias que creo el admin correspondiente
     this.crudCompaniesService.consultCompanies({
       idAdmin: this.adminName.id
     }).subscribe(response =>{
 
       this.companies = response;
 
+      //se guarda las companias en un array para iterarse y mostrarse
       this.companiesForAdmin = this.companies.mensaje
 
       this.companiesForAdmin.push({
@@ -55,6 +58,7 @@ export class UserAdminComponent implements OnInit {
    
   }
   
+  //cierra la sesion y te redirige al login
   closeSession(){
     this.crudAdminService.logoffAdmin({
       id: this.adminName.id
@@ -67,6 +71,7 @@ export class UserAdminComponent implements OnInit {
     })
   }
 
+  //elimina la compania que le corresponde a cada admin
   deleteCompany(companieForAdmin:any){
    
     this.crudCompaniesService.deleteCompany({
@@ -99,24 +104,23 @@ export class UserAdminComponent implements OnInit {
     })
     
   }
-
+  //actualiza la compania que le corresponde a cada admin
   updateCompany(companieForAdmin:any, index:any){
 
     const d = document;
-
-    
-
     let update;
     let udpatesValues:any = [];
-    
+
+    //obtiene la fila donde esta el boton correspondiente
     d.querySelectorAll(`.fila${index+1}`).forEach((elemento, index) =>{
 
-      
-
+      //si esta seleccionado las casillas te indica que edites las casillas de la fila y
+      //nuevamente presiones el boton de actualizar para confirmar la accion
       if(index === 0 && elemento.classList.contains('editRow') === false){
         this.toastrService.info("Edite las casilla en negro, si desea confirmar la actualizacion pulse de nuevo el boton de 'Actualizar'","Ya puede editar el registro");
       }
-
+      //aqui remueve los estilos que indican que se puede editar las casillas, y esta
+      //la pregunta de confirmacion para realizar la accion
       if(index === 0 && elemento.classList.contains('editRow') === true){
 
         update = confirm(`Estas seguro que quieres actualizar el registro?.\nNombre: ${companieForAdmin.Nombre}\nRif: ${companieForAdmin.Rif}\nDireccion: ${companieForAdmin.Direccion}`)
@@ -124,10 +128,12 @@ export class UserAdminComponent implements OnInit {
         elemento.removeAttribute("contenteditable");
 
         elemento.classList.remove("editRow");
-
+        
+        //guarda los valores que se editaron
         udpatesValues.push(elemento.innerHTML);
 
       }
+      //seleciona las casillas y las vuelve editables y cambia el estilo
       else{
 
 
@@ -141,6 +147,7 @@ export class UserAdminComponent implements OnInit {
 
     });
 
+    //si confirma la actualizacion, realiza el crud en la base de datos
     if(update){
 
       this.crudCompaniesService.updateCompany({
@@ -174,10 +181,9 @@ export class UserAdminComponent implements OnInit {
     
         });
       })
-
-      
     }
     
+
     
   }
 
@@ -185,17 +191,20 @@ export class UserAdminComponent implements OnInit {
   addCompany(){
     const d = document;
 
-    
-    
     let update;
     let udpatesValues:any = [];
    
-
+    //obtiene la fila donde esta el boton correspondiente
     d.querySelectorAll(`.fila${this.companiesForAdmin.length }`).forEach((elemento, index) =>{
+
+      //si esta seleccionado las casillas te indica que edites las casillas de la fila y
+      //nuevamente presiones el boton de agregar para confirmar la accion
       if(index === 0 && elemento.classList.contains('editRow') === false){
         this.toastrService.info("Edite las casilla en negro, si desea confirmar el registro de una empresa pulse de nuevo el boton de 'Agregar Empresa'","Ya puede editar el registro");
       }
 
+      //aqui remueve los estilos que indican que se puede editar las casillas, y esta
+      //la pregunta de confirmacion para realizar la accion
       if(index === 0 && elemento.classList.contains('editRow') === true){
 
         update = confirm(`Estas seguro que quieres guardar el registro?`)
@@ -207,22 +216,22 @@ export class UserAdminComponent implements OnInit {
         udpatesValues.push(elemento.innerHTML);
 
       }
-
+      //seleciona las casillas y las vuelve editables y cambia el estilo
       else{
-
 
         elemento.toggleAttribute("contenteditable");
 
         elemento.classList.toggle("editRow");
 
+        //guarda los valores que se editaron
         udpatesValues.push(elemento.innerHTML);
 
       }
     });
 
+    //si confirma la actualizacion, realiza el crud en la base de datos
     if(update){
       
-
       this.crudCompaniesService.registrarCompany({
         nombre: udpatesValues[0],
         rif: udpatesValues[1],
@@ -233,13 +242,19 @@ export class UserAdminComponent implements OnInit {
         this.updated = response;
         console.log(this.updated);
 
+        //codigo -1 indica que acontencio un error
         if(this.updated.codigo === -1){
           this.toastrService.error(this.updated.mensaje, this.updated.error);
         }
-        if(this.updated.codigo === 0){}
+        //codigo 0 indica que no acontencio un error, pero no hizo la accion del crud
+        if(this.updated.codigo === 0){
+          this.toastrService.error(this.updated.mensaje, this.updated.error);
+        }
+        //codigo 1 se realizo el crud con exito
         if(this.updated.codigo === 1){
           this.toastrService.success("Se guardo el registro exitosamente", "Registo guardado");
 
+          //se consultas las companias para actualizar la lista de companias
           this.crudCompaniesService.consultCompanies({
             idAdmin: this.adminName.id
           }).subscribe(response =>{
@@ -262,27 +277,7 @@ export class UserAdminComponent implements OnInit {
         }
 
         
-        /* this.toastrService.success("Se guardo el registro exitosamente", "Registo guardado"); */
-
-        /* this.companiesForAdmin.push({
-        Direccion:"",
-        IdAdmin:"",
-        Nombre:"",
-        Rif:"",
-        __v:"",
-        _id:""
-
-        }); */
         
-        /* this.crudCompaniesService.consultCompanies({
-          idAdmin: this.adminName.id
-        }).subscribe(response =>{
-    
-          this.companies = response;
-    
-          this.companiesForAdmin = this.companies.mensaje
-    
-        }); */
       })
 
       

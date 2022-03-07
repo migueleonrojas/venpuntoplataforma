@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SignUpComponent } from './sign-up/sign-up.component';
 import { LoginComponent } from './login/login.component';
 import { CookieService } from 'ngx-cookie-service';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -19,7 +18,7 @@ import {LoginAdminGuard} from './security/login-admin.guard';
 @NgModule({
   declarations: [
     AppComponent,
-    SignUpComponent,
+    
     LoginComponent,
     UserAdminComponent
   ],
@@ -28,7 +27,6 @@ import {LoginAdminGuard} from './security/login-admin.guard';
     AppRoutingModule,
     RouterModule.forRoot([
       {path: '', component: LoginComponent, canActivate: [LoginAdminGuard]},
-      {path: 'sing_up', component: SignUpComponent},
       {path: 'admin_user', component: UserAdminComponent, canActivate: [UserAdminGuard]}
       
     ]),
